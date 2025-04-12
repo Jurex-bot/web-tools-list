@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Web Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-electronic-digital-scanning-1683.mp3" preload="auto"></audio>
+    
+    <!-- Admin Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter admin username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <button id="loginBtn">Login</button>
+            <p id="loginError" class="error-message"></p>
+        </div>
+    </div>
+
+    <div class="jarvis-container">
+        <div class="header">
+            <div class="power-button" id="powerBtn">
+                <div class="power-icon"></div>
+            </div>
+            <h1>JARVIS WEB DIRECTORY</h1>
+            <div class="header-controls">
+                <button id="adminBtn" class="admin-btn hidden"><i class="fas fa-user-shield"></i> Admin</button>
+                <div class="status-lights">
+                    <div class="light red"></div>
+                    <div class="light yellow"></div>
+                    <div class="light green active"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-display">
+            <div class="scanline"></div>
+            <div class="content" id="content">
+                <div class="welcome-message" id="welcomeMessage">
+                    <p class="typing">Initializing J.A.R.V.I.S. System...</p>
+                    <p class="typing">Welcome back, Sir.</p>
+                    <p class="typing">Your web directory is ready for access.</p>
+                </div>
+                
+                <div class="directory-container hidden" id="directoryContainer">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search websites...">
+                    </div>
+                    <div class="website-list" id="websiteList">
+                        <!-- Websites will be added here by JavaScript -->
+                    </div>
+                    <div class="add-website hidden" id="addWebsiteForm">
+                        <input type="text" id="newWebsiteName" placeholder="Website name">
+                        <input type="text" id="newWebsiteUrl" placeholder="URL (include https://)">
+                        <button id="addWebsiteBtn">Add Website</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="console" id="console">
+            <div class="console-header">
+                <span>System Console</span>
+                <div class="console-controls">
+                    <button id="clearConsoleBtn">Clear</button>
+                    <button id="minimizeConsoleBtn">-</button>
+                </div>
+            </div>
+            <div class="console-output" id="consoleOutput">
+                <p>> System boot sequence initiated...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+                  </html>
