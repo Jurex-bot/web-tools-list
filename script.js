@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const consoleElement = document.getElementById('console');
     const hoverSound = document.getElementById('hoverSound');
     const clickSound = document.getElementById('clickSound');
+    const loginSound = document.getElementById('loginSound');
+    const deniedSound = document.getElementById('deniedSound');
     const loginModal = document.getElementById('loginModal');
     const loginBtn = document.getElementById('loginBtn');
     const adminBtn = document.getElementById('adminBtn');
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
     const loginError = document.getElementById('loginError');
+    const timeDisplay = document.getElementById('timeDisplay');
     
     // Admin credentials (in a real app, this would be server-side)
     const ADMIN_CREDENTIALS = {
@@ -50,6 +53,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the system
     initSystem();
     
+    // Update time display
+    function updateTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    
+    setInterval(updateTime, 1000);
+    updateTime();
+    
     // Event Listeners
     powerBtn.addEventListener('click', togglePower);
     addWebsiteBtn.addEventListener('click', addWebsite);
@@ -72,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Add hover sound to interactive elements
-    const interactiveElements = document.querySelectorAll('button, .website-item, .power-button, .close-modal');
+    const interactiveElements = document.querySelectorAll('button, .website-item, .power-button, .close-modal, input');
     interactiveElements.forEach(element => {
         element.addEventListener('mouseenter', () => {
             hoverSound.currentTime = 0;
@@ -91,18 +106,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Functions
     function initSystem() {
-        logToConsole('> System boot sequence initiated...');
+        logToConsole('> SYSTEM BOOT SEQUENCE INITIATED...');
         setTimeout(() => {
-            logToConsole('> Loading core modules...');
+            logToConsole('> LOADING CORE MODULES...');
         }, 1000);
         setTimeout(() => {
-            logToConsole('> Establishing network connections...');
+            logToConsole('> ESTABLISHING NETWORK CONNECTIONS...');
         }, 2000);
         setTimeout(() => {
-            logToConsole('> Initializing user interface...');
+            logToConsole('> INITIALIZING USER INTERFACE...');
         }, 3000);
         setTimeout(() => {
-            logToConsole('> System ready.');
+            logToConsole('> SYSTEM READY.');
             powerOn();
         }, 4000);
     }
@@ -119,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 directoryContainer.classList.add('visible');
                 renderWebsites();
             }, 100);
-        }, 8500); // After typing animations complete
+        }, 11500); // After typing animations complete
     }
     
     function togglePower() {
@@ -133,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 directoryContainer.classList.add('hidden');
             }, 500);
-            logToConsole('> System shutdown initiated...');
+            logToConsole('> SYSTEM SHUTDOWN INITIATED...');
         } else {
             // Power on
             initSystem();
@@ -149,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
         
         if (filteredWebsites.length === 0) {
-            websiteList.innerHTML = '<p class="no-results">No websites found matching your search.</p>';
+            websiteList.innerHTML = '<p class="no-results">NO WEBSITES FOUND MATCHING YOUR SEARCH.</p>';
             return;
         }
         
@@ -177,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
             websiteElement.addEventListener('click', (e) => {
                 // Don't navigate if clicking on delete button
                 if (!e.target.closest('.delete-btn')) {
-                    logToConsole(`> Opening ${website.name}...`);
+                    logToConsole(`> ACCESSING ${website.name}...`);
                     window.open(website.url, '_blank');
                 }
             });
@@ -221,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = newWebsiteUrl.value.trim();
         
         if (!name || !url) {
-            logToConsole('> Error: Please provide both name and URL.', 'error');
+            logToConsole('> ERROR: PLEASE PROVIDE BOTH NAME AND URL.', 'error');
             return;
         }
         
@@ -229,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             new URL(url);
         } catch (e) {
-            logToConsole('> Error: Please enter a valid URL (include http:// or https://).', 'error');
+            logToConsole('> ERROR: INVALID URL FORMAT (INCLUDE HTTPS://).', 'error');
             return;
         }
         
@@ -242,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
         newWebsiteName.value = '';
         newWebsiteUrl.value = '';
         
-        logToConsole(`> Added new website: ${name}`);
+        logToConsole(`> NEW ENTRY ADDED TO DIRECTORY: ${name}`, 'success');
     }
     
     function deleteWebsite(index) {
@@ -250,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
         websites.splice(index, 1);
         saveWebsites();
         renderWebsites(searchInput.value);
-        logToConsole(`> Deleted website: ${deletedWebsite.name}`);
+        logToConsole(`> ENTRY REMOVED FROM DIRECTORY: ${deletedWebsite.name}`, 'warning');
     }
     
     function filterWebsites() {
@@ -265,10 +280,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageElement = document.createElement('p');
         messageElement.textContent = `> ${message}`;
         
-        if (type === 'error') {
-            messageElement.style.color = 'var(--error-color)';
-        } else if (type === 'success') {
-            messageElement.style.color = 'var(--accent-color)';
+        switch(type) {
+            case 'error':
+                messageElement.classList.add('error');
+                break;
+            case 'success':
+                messageElement.classList.add('success');
+                break;
+            case 'warning':
+                messageElement.classList.add('warning');
+                break;
         }
         
         consoleOutput.appendChild(messageElement);
@@ -277,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function clearConsole() {
         consoleOutput.innerHTML = '';
-        logToConsole('Console cleared.');
+        logToConsole('CONSOLE CLEARED.');
     }
     
     function toggleConsole() {
@@ -296,25 +317,89 @@ document.addEventListener('DOMContentLoaded', function() {
         if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
             isAdminLoggedIn = true;
             loginModal.style.display = 'none';
-            adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Logout';
+            adminBtn.innerHTML = '<i class="fas fa-user-secret"></i><span>LOGOUT</span>';
             addWebsiteForm.classList.remove('hidden');
             renderWebsites();
-            logToConsole('> Admin logged in successfully.', 'success');
+            logToConsole('> ADMIN ACCESS GRANTED. WELCOME, SIR.', 'success');
+            loginSound.currentTime = 0;
+            loginSound.volume = 0.3;
+            loginSound.play().catch(e => console.log('Audio play error:', e));
         } else {
-            loginError.textContent = 'Invalid username or password';
+            loginError.textContent = 'ACCESS DENIED: INVALID CREDENTIALS';
+            deniedSound.currentTime = 0;
+            deniedSound.volume = 0.3;
+            deniedSound.play().catch(e => console.log('Audio play error:', e));
         }
     }
     
     function logoutAdmin() {
         isAdminLoggedIn = false;
-        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin';
+        adminBtn.innerHTML = '<i class="fas fa-user-secret"></i><span>ADMIN</span>';
         addWebsiteForm.classList.add('hidden');
         renderWebsites();
-        logToConsole('> Admin logged out.');
+        logToConsole('> ADMIN SESSION TERMINATED.', 'warning');
     }
     
     // Prevent form submission
     document.querySelector('.add-website').addEventListener('submit', function(e) {
         e.preventDefault();
     });
+    
+    // Matrix effect
+    function createMatrixEffect() {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '-2';
+        canvas.style.opacity = '0.15';
+        document.body.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        
+        const alphabet = katakana + latin + nums;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        
+        const rainDrops = [];
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 30);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    }
+    
+    createMatrixEffect();
 });
