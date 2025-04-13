@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const clickSound = document.getElementById('clickSound');
     const loginSound = document.getElementById('loginSound');
     const deniedSound = document.getElementById('deniedSound');
+    const powerUpSound = document.getElementById('powerUpSound');
     const loginModal = document.getElementById('loginModal');
     const loginBtn = document.getElementById('loginBtn');
     const adminBtn = document.getElementById('adminBtn');
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const loginError = document.getElementById('loginError');
     const timeDisplay = document.getElementById('timeDisplay');
+    const statusIndicators = document.querySelectorAll('.indicator');
     
     // Admin credentials (in a real app, this would be server-side)
     const ADMIN_CREDENTIALS = {
@@ -34,11 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Sample websites data
     let websites = [
-        { name: 'Google', url: 'https://www.google.com' },
-        { name: 'GitHub', url: 'https://github.com' },
-        { name: 'YouTube', url: 'https://www.youtube.com' },
-        { name: 'MDN Web Docs', url: 'https://developer.mozilla.org' },
-        { name: 'Stack Overflow', url: 'https://stackoverflow.com' }
+        { name: 'Stark Industries', url: 'https://www.starkindustries.com' },
+        { name: 'SHIELD Database', url: 'https://www.shield.gov' },
+        { name: 'Avengers Initiative', url: 'https://www.avengers.com' },
+        { name: 'Wakanda Tech', url: 'https://www.wakanda.tech' },
+        { name: 'Arc Reactor Specs', url: 'https://www.arkreactor.net' }
     ];
     
     // System state
@@ -106,26 +108,41 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Functions
     function initSystem() {
-        logToConsole('> SYSTEM BOOT SEQUENCE INITIATED...');
+        logToConsole('> INITIALIZING J.A.R.V.I.S. MARK VII SYSTEM...');
+        activateIndicator('online');
+        
         setTimeout(() => {
-            logToConsole('> LOADING CORE MODULES...');
+            logToConsole('> RUNNING DIAGNOSTICS...');
+            activateIndicator('defense');
         }, 1000);
+        
         setTimeout(() => {
-            logToConsole('> ESTABLISHING NETWORK CONNECTIONS...');
+            logToConsole('> CALIBRATING ARMOR SYSTEMS...');
+            activateIndicator('weapons');
         }, 2000);
+        
         setTimeout(() => {
-            logToConsole('> INITIALIZING USER INTERFACE...');
-        }, 3000);
-        setTimeout(() => {
-            logToConsole('> SYSTEM READY.');
+            logToConsole('> ALL SYSTEMS NOMINAL');
             powerOn();
-        }, 4000);
+        }, 3000);
+    }
+    
+    function activateIndicator(status) {
+        statusIndicators.forEach(indicator => {
+            if (indicator.dataset.status === status) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
     }
     
     function powerOn() {
         isPoweredOn = true;
         powerBtn.classList.remove('off');
-        document.querySelector('.light.green').classList.add('active');
+        powerUpSound.currentTime = 0;
+        powerUpSound.volume = 0.3;
+        powerUpSound.play().catch(e => console.log('Audio play error:', e));
         
         setTimeout(() => {
             welcomeMessage.classList.add('hidden');
@@ -133,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 directoryContainer.classList.add('visible');
                 renderWebsites();
+                adminBtn.classList.remove('hidden');
             }, 100);
         }, 11500); // After typing animations complete
     }
@@ -142,9 +160,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Power off
             isPoweredOn = false;
             powerBtn.classList.add('off');
-            document.querySelector('.light.green').classList.remove('active');
+            statusIndicators.forEach(indicator => indicator.classList.remove('active'));
             welcomeMessage.classList.remove('hidden');
             directoryContainer.classList.remove('visible');
+            adminBtn.classList.add('hidden');
             setTimeout(() => {
                 directoryContainer.classList.add('hidden');
             }, 500);
@@ -213,19 +232,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function getIconForDomain(domain) {
         const iconMap = {
+            'starkindustries.com': 'industry',
+            'shield.gov': 'shield-alt',
+            'avengers.com': 'users',
+            'wakanda.tech': 'atom',
+            'arkreactor.net': 'bolt',
             'google.com': 'search',
             'github.com': 'code-branch',
             'youtube.com': 'youtube',
             'developer.mozilla.org': 'firefox',
-            'stackoverflow.com': 'stack-overflow',
-            'twitter.com': 'twitter',
-            'facebook.com': 'facebook',
-            'instagram.com': 'instagram',
-            'linkedin.com': 'linkedin',
-            'reddit.com': 'reddit',
-            'amazon.com': 'amazon',
-            'netflix.com': 'tv',
-            'spotify.com': 'spotify'
+            'stackoverflow.com': 'stack-overflow'
         };
         
         return iconMap[domain] || 'globe';
@@ -317,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
             isAdminLoggedIn = true;
             loginModal.style.display = 'none';
-            adminBtn.innerHTML = '<i class="fas fa-user-secret"></i><span>LOGOUT</span>';
+            adminBtn.innerHTML = '<i class="fas fa-user-shield"></i><span>LOGOUT</span>';
             addWebsiteForm.classList.remove('hidden');
             renderWebsites();
             logToConsole('> ADMIN ACCESS GRANTED. WELCOME, SIR.', 'success');
@@ -334,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function logoutAdmin() {
         isAdminLoggedIn = false;
-        adminBtn.innerHTML = '<i class="fas fa-user-secret"></i><span>ADMIN</span>';
+        adminBtn.innerHTML = '<i class="fas fa-user-shield"></i><span>ADMIN</span>';
         addWebsiteForm.classList.add('hidden');
         renderWebsites();
         logToConsole('> ADMIN SESSION TERMINATED.', 'warning');
@@ -345,61 +361,32 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
     });
     
-    // Matrix effect
-    function createMatrixEffect() {
-        const canvas = document.createElement('canvas');
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = '-2';
-        canvas.style.opacity = '0.15';
-        document.body.appendChild(canvas);
+    // Create holographic particle effect
+    function createParticles() {
+        const particlesContainer = document.querySelector('.particles');
+        const particleCount = 50;
         
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        
-        const alphabet = katakana + latin + nums;
-        
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        
-        const rainDrops = [];
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties
+            const size = Math.random() * 3 + 1;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 10 + 5;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            particle.style.animationDelay = `${delay}s`;
+            particle.style.animationDuration = `${duration}s`;
+            
+            particlesContainer.appendChild(particle);
         }
-        
-        const draw = () => {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-            
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
-                rainDrops[i]++;
-            }
-        };
-        
-        setInterval(draw, 30);
-        
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
     }
     
-    createMatrixEffect();
+    createParticles();
 });
