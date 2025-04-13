@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS :: Web Directory</title>
+    <title>JARVIS :: Mark VII</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="matrix-effect"></div>
-    <div class="hacker-grid"></div>
+    <div class="holographic-bg"></div>
+    <div class="particles"></div>
     
-    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" preload="auto"></audio>
-    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-electronic-digital-scanning-1683.mp3" preload="auto"></audio>
+    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-ui-2572.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-click-tech-2580.mp3" preload="auto"></audio>
     <audio id="loginSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
     <audio id="deniedSound" src="https://assets.mixkit.co/sfx/preview/mixkit-security-unauthorized-alarm-2676.mp3" preload="auto"></audio>
+    <audio id="powerUpSound" src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-positive-interface-2571.mp3" preload="auto"></audio>
     
     <!-- Admin Login Modal -->
     <div class="modal" id="loginModal">
@@ -27,121 +28,163 @@
                     <div class="light green"></div>
                 </div>
                 <h2>SECURE ADMIN ACCESS</h2>
-                <span class="close-modal">&times;</span>
+                <span class="close-modal"><i class="fas fa-times"></i></span>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="username">USERNAME:</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="username" placeholder="ENTER ADMIN CREDENTIALS">
-                        <div class="input-underline"></div>
+                <div class="holographic-form">
+                    <div class="form-group">
+                        <label for="username">USER IDENTIFICATION</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-tag"></i>
+                            <input type="text" id="username" placeholder="ENTER ADMIN CREDENTIALS">
+                            <div class="input-underline"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="password">PASSWORD:</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="password" placeholder="············">
-                        <div class="input-underline"></div>
+                    <div class="form-group">
+                        <label for="password">SECURITY CLEARANCE</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-fingerprint"></i>
+                            <input type="password" id="password" placeholder="············">
+                            <div class="input-underline"></div>
+                        </div>
                     </div>
+                    <div class="security-check">
+                        <div class="scan-line"></div>
+                        <span>BIOMETRIC SCAN IN PROGRESS</span>
+                    </div>
+                    <button id="loginBtn" class="holographic-btn">
+                        <span>AUTHORIZE ACCESS</span>
+                        <div class="holographic-glow"></div>
+                    </button>
+                    <p id="loginError" class="error-message"></p>
                 </div>
-                <div class="security-check">
-                    <div class="scan-line"></div>
-                    <span>SECURITY SCAN IN PROGRESS</span>
-                </div>
-                <button id="loginBtn" class="glow-button">
-                    <span>VERIFY IDENTITY</span>
-                    <div class="glow"></div>
-                </button>
-                <p id="loginError" class="error-message"></p>
             </div>
         </div>
     </div>
 
-    <div class="jarvis-container">
-        <div class="system-header">
-            <div class="header-left">
-                <div class="power-button" id="powerBtn">
-                    <div class="power-icon"></div>
-                    <div class="power-glow"></div>
+    <div class="jarvis-interface">
+        <div class="armor-hud">
+            <div class="hud-left">
+                <div class="system-status">
+                    <div class="power-button" id="powerBtn">
+                        <div class="power-core"></div>
+                        <div class="power-glow"></div>
+                    </div>
+                    <div class="status-indicators">
+                        <div class="indicator active" data-status="online"></div>
+                        <div class="indicator" data-status="defense"></div>
+                        <div class="indicator" data-status="weapons"></div>
+                    </div>
                 </div>
-                <div class="header-title">
-                    <h1>J.A.R.V.I.S.</h1>
-                    <p>WEB DIRECTORY SYSTEM</p>
+                <div class="user-greeting">
+                    <p>GOOD EVENING, SIR</p>
+                    <h1>J.A.R.V.I.S. <span>MARK VII</span></h1>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="time-display" id="timeDisplay">23:59:47</div>
-                <button id="adminBtn" class="admin-btn hidden">
-                    <i class="fas fa-user-secret"></i>
-                    <span>ADMIN</span>
-                    <div class="button-glow"></div>
-                </button>
-                <div class="status-lights">
-                    <div class="light red"></div>
-                    <div class="light yellow"></div>
-                    <div class="light green active"></div>
+            <div class="hud-right">
+                <div class="time-display" id="timeDisplay">21:47:35</div>
+                <div class="armor-status">
+                    <div class="status-item">
+                        <span>SYSTEM</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <span>POWER</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: 98%"></div>
+                        </div>
+                    </div>
                 </div>
+                <button id="adminBtn" class="holographic-btn small hidden">
+                    <i class="fas fa-user-shield"></i>
+                    <span>ADMIN</span>
+                    <div class="holographic-glow"></div>
+                </button>
             </div>
         </div>
         
         <div class="main-display">
-            <div class="scanline"></div>
-            <div class="hexagon-overlay"></div>
-            <div class="content" id="content">
-                <div class="welcome-message" id="welcomeMessage">
-                    <p class="typing">> INITIALIZING J.A.R.V.I.S. SYSTEM...</p>
-                    <p class="typing">> BIOMETRIC SCAN COMPLETE</p>
-                    <p class="typing">> WELCOME BACK, SIR</p>
-                    <p class="typing">> WEB DIRECTORY ONLINE</p>
-                </div>
-                
-                <div class="directory-container hidden" id="directoryContainer">
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="SEARCH DATABASE...">
-                        <div class="search-underline"></div>
+            <div class="holographic-screen">
+                <div class="content" id="content">
+                    <div class="welcome-message" id="welcomeMessage">
+                        <p class="typing">> INITIALIZING J.A.R.V.I.S. MARK VII SYSTEM...</p>
+                        <p class="typing">> BIOMETRIC SCAN COMPLETE</p>
+                        <p class="typing">> ARMOR SYSTEMS ONLINE</p>
+                        <p class="typing">> ALL SYSTEMS NOMINAL</p>
                     </div>
-                    <div class="website-list" id="websiteList">
-                        <!-- Websites will be added here by JavaScript -->
-                    </div>
-                    <div class="add-website hidden" id="addWebsiteForm">
-                        <div class="form-row">
-                            <div class="input-wrapper">
-                                <input type="text" id="newWebsiteName" placeholder="SITE DESIGNATION">
-                                <div class="input-underline"></div>
-                            </div>
-                            <div class="input-wrapper">
-                                <input type="text" id="newWebsiteUrl" placeholder="TARGET URL (HTTPS://)">
-                                <div class="input-underline"></div>
+                    
+                    <div class="directory-container hidden" id="directoryContainer">
+                        <div class="holographic-header">
+                            <h2>WEB DIRECTORY</h2>
+                            <div class="search-bar">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="SEARCH DATABASE...">
+                                <div class="search-underline"></div>
                             </div>
                         </div>
-                        <button id="addWebsiteBtn" class="glow-button">
-                            <span>ADD TO DIRECTORY</span>
-                            <div class="glow"></div>
-                        </button>
+                        <div class="website-list" id="websiteList">
+                            <!-- Websites will be added here by JavaScript -->
+                        </div>
+                        <div class="add-website hidden" id="addWebsiteForm">
+                            <div class="holographic-form">
+                                <div class="form-row">
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-tag"></i>
+                                        <input type="text" id="newWebsiteName" placeholder="SITE DESIGNATION">
+                                        <div class="input-underline"></div>
+                                    </div>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-link"></i>
+                                        <input type="text" id="newWebsiteUrl" placeholder="TARGET URL (HTTPS://)">
+                                        <div class="input-underline"></div>
+                                    </div>
+                                </div>
+                                <button id="addWebsiteBtn" class="holographic-btn">
+                                    <span>ADD TO DIRECTORY</span>
+                                    <div class="holographic-glow"></div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="console" id="console">
+        <div class="armor-console" id="console">
             <div class="console-header">
                 <div class="console-title">
                     <i class="fas fa-terminal"></i>
                     <span>SYSTEM CONSOLE</span>
                 </div>
                 <div class="console-controls">
-                    <button id="clearConsoleBtn" class="console-btn">
+                    <button id="clearConsoleBtn" class="holographic-btn xsmall">
                         <i class="fas fa-trash"></i>
                         <span>CLEAR</span>
                     </button>
-                    <button id="minimizeConsoleBtn" class="console-btn">
+                    <button id="minimizeConsoleBtn" class="holographic-btn xsmall">
                         <i class="fas fa-window-minimize"></i>
                     </button>
                 </div>
             </div>
             <div class="console-output" id="consoleOutput">
                 <p>> SYSTEM BOOT SEQUENCE INITIATED...</p>
+            </div>
+        </div>
+        
+        <div class="armor-footer">
+            <div class="footer-item">
+                <span>STATUS</span>
+                <p>OPERATIONAL</p>
+            </div>
+            <div class="footer-item">
+                <span>VERSION</span>
+                <p>MARK VII</p>
+            </div>
+            <div class="footer-item">
+                <span>POWER</span>
+                <p>98%</p>
             </div>
         </div>
     </div>
